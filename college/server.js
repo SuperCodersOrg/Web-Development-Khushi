@@ -63,18 +63,31 @@ const server = http.createServer((req, res) => {
         else if (req.url === '/about') {
             filePath = 'about.html';
         }
-        else if (req.url === '/courses/bca') {
-            filePath = 'bca.html';
-        }
-        else if (req.url === '/courses/btech') {
-            filePath = 'btech.html';
-        }
+        else if (req.url.startsWith('/courses')) {
+            // using split
+            let split =req.url.split('/');
+            console.log(split);
+            if(split[2]==='bca'){
+             filePath = 'bca.html';   
+            }
+            else if(split[2]==='btech'){
+              filePath = 'btech.html';   
+            }
+            else{
+               filePath = 'courses.html'; 
+            }}
+            // else if(req.url ==='/courser/bca){ 
+        //     filePath = 'bca.html';
+        // }
+        // else if (req.url === '/courses/btech') {
+        //     filePath = 'btech.html';
+        // }
         else if (req.url === '/contact') {
             filePath = 'contact.html';
         }
-        else if (req.url === '/courses') {
-            filePath = 'courses.html';
-        }
+        // else if (req.url === '/courses') {
+        //     filePath = 'courses.html';
+        // }
         else if (req.url === '/facilities') {
             filePath = 'facilities.html';
         }
