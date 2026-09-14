@@ -72,6 +72,7 @@ const server = http.createServer((req, res) => {
             }
             else if(split[2]==='btech'){
               filePath = 'btech.html';   
+              
             }
             else{
                filePath = 'courses.html'; 
