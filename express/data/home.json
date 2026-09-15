@@ -1,0 +1,26 @@
+{
+  "welcome": {
+    "heading": "Welcome to ABC College",
+    "description": "Welcome to our college website.",
+    "buttonText": "Explore Courses",
+    "buttonLink": "courses.html"
+  },
+  "about": {
+    "heading": "About Our College",
+    "description": "ABC College provides quality education."
+  },
+  "cards": [
+    {
+      "heading": "Courses",
+      "description": "Explore our available courses.",
+      "link": "courses.html",
+      "linkText": "View Courses"
+    },
+    {
+      "heading": "About",
+      "description": "Know more about our college.",
+      "link": "about.html",
+      "linkText": "Read More"
+    }
+  ]
+}
