@@ -21,13 +21,17 @@ if (!fp.existsSync(destination)) {
 //     fp.copyFileSync(source+'/'+file, destination+'/'+file);
 //      }
 //      console.log("copied");
-function findfolder(folder) {
+function findfolder(folder,destFolder) {
     let data = fp.readdirSync(folder);
     for (let file of data) {
         let fullpath = path.join(folder, file);
         let fileinfo = fp.statSync(fullpath);
         if (fileinfo.isDirectory()) {
-            findfolder(fullpath);
+            let newDest = path.join(destFolder, file);
+            if (!fp.existsSync(newDest)) {
+                fp.mkdirSync(newDest);
+            }
+            findfolder(fullpath,newDest);
         }
         else {
             if (path.extname(file) === extension) {
@@ -37,4 +41,4 @@ function findfolder(folder) {
         }
     }
 }
-findfolder(source);
+findfolder(source,destination);
