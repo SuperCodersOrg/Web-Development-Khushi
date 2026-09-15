@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Search</title>
+</head>
+<body>
+    <h2>Search Data Using Query</h2>
+    <input type="text" id="search" placeholder="enter name">
+    <button id="searchBtn">Search</button>
+    <h3>Result</h3>
+    <ul id="result"></ul>
+
+    <script>
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            let query = document.getElementById('search').value;
+            let resultList = document.getElementById('result');
+            // let url = new URL('http://localhost:3000/search');
+            // url.searchParams.append('q', query);
+            const queryset =new URLSearchParams();
+            if(query){
+                queryset.set("q",query);
+            }
+            
+            fetch(url)
+                .then((response) => response.json())
+                .then((data) => {
+                    resultList.innerHTML = '';                    
+                    if (!data.results || data.results.length === 0) {
+                        resultList.innerHTML = '<li>No user found</li>';
+                        return;
+                    }
+                         data.results.forEach(user => {
+                        let li = document.createElement('li');
+                        li.textContent = user.name + ' - ' + (user.role || 'N/A');
+                        resultList.appendChild(li);
+                    });
+                })
+                .catch(function(error) {                    
+                    resultList.innerHTML = '<li>Error fetching data.</li>';
+                    console.error('Fetch error:', error);
+                });
+        });
+    </script>
+</body>
+</html>
