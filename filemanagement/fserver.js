@@ -1,0 +1,40 @@
+let fp = require('fs');
+let path = require('path');
+let arr = [];
+const source = process.argv[2];
+const extension = process.argv[3];
+const destination = process.argv[4];
+let res = fp.existsSync(source);
+if (!res) {
+    console.log("source directory dont exist");
+    process.exit();
+}
+if (!fp.existsSync(destination)) {
+    fp.mkdirSync(destination);
+}
+// non recursive
+//  let data =fp.readdirSync(source);
+//  arr=data.filter(function(file){
+//     return path.extname(file)===extension;
+//  });
+//  for(let file of arr){
+//     fp.copyFileSync(source+'/'+file, destination+'/'+file);
+//      }
+//      console.log("copied");
+function findfolder(folder) {
+    let data = fp.readdirSync(folder);
+    for (let file of data) {
+        let fullpath = path.join(folder, file);
+        let fileinfo = fp.statSync(fullpath);
+        if (fileinfo.isDirectory()) {
+            findfolder(fullpath);
+        }
+        else {
+            if (path.extname(file) === extension) {
+                fp.copyFileSync(fullpath, destination + '/' + file)
+
+            } console.log("copied");
+        }
+    }
+}
+findfolder(source);

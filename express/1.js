@@ -51,9 +51,17 @@ app.get('/students',(req,res)=>{
     res.sendFile(path.join(__dirname, 'frontend', 'students.html'));
 })
 app.post('/students',(req,res)=>{
-    let data =req.body;
-    console.log(data);
-})    
+    
+    res.setHeader('Content-Type', 'application/json');
+    const newData = req.body;
+    if(!newData){
+        console.log(newData);
+        return res.status(200);
+    }
+     })
+    
+
+   
     
 app.listen(3270,()=>{
     console.log("server running");
