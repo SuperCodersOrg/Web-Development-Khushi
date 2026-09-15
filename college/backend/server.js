@@ -5,28 +5,48 @@ const port = 3270;
 const datafile = path.join(__dirname, 'datafile.json');
 
 const server = http.createServer((req, res) => {
-    if (req.url === '/style.css' && req.method === 'GET') {
-        res.statusCode = 200;
-        let pathcss = path.join(__dirname,'..', 'frontend', 'style.css');
-        fs.readFile(pathcss, 'utf-8', (err, data) => {
-            if (err) {
-                res.statusCode = 500;
-                res.end('INTERNAL SERVER ERROR');
-                return;
-            }
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'text/css');
-            res.end(data);
-        })
+      res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+        res.writeHead(204);
+        res.end();
         return;
     }
-     if (req.method === 'POST' && req.url === '/students') {
+// res.writeHead(404,{'Content-Type':'application/json'})
+// res.end('ROUTE NOT FOUND');
+    // if (req.url === '/style.css' && req.method === 'GET') {
+    //     res.statusCode = 200;
+    //     let pathcss = path.join(__dirname,'..', 'frontend', 'style.css');
+    //     fs.readFile(pathcss, 'utf-8', (err, data) => {
+    //         if (err) {
+    //             res.statusCode = 500;
+    //             res.end('INTERNAL SERVER ERROR');
+    //             return;
+    //         }
+    //         res.statusCode = 200;
+    //         res.setHeader('Content-Type', 'text/css');
+    //         res.end(data);
+    //     })
+    //     return;
+    // }
+    if (req.method === 'POST' && req.url === '/students') {
             let body = '';
             req.on('data', chunk => {
                 body += chunk;
             });
             req.on('end', () => {
-                const formData = JSON.parse(body);
+                let formData;
+                try{
+          formData = JSON.parse(body);
+                }
+                catch(err){
+                     res.statusCode = 500;
+                            res.end('ERROR READING DATA');
+                            return;
+                }
+                 
                 fs.readFile(datafile, 'utf-8', (err, data)=>{
                     let value = [];
                     if (!err && formData) {
@@ -54,69 +74,55 @@ const server = http.createServer((req, res) => {
     }) ;
     return;}
 
+if (req.method === 'GET') {
+    let filePath = '';
 
-    if (req.method === 'GET') {
-        let filePath;
-        if (req.url === '/') {
-            filePath = 'index.html';
-        }
-        else if (req.url === '/about') {
-            filePath = 'about.html';
-        }
-        else if (req.url.startsWith('/courses')) {
-            // using split
-            let split =req.url.split('/');
-            console.log(split);
-            if(split[2]==='bca'){
-             filePath = 'bca.html';   
-            }
-            else if(split[2]==='btech'){
-              filePath = 'btech.html';   
-              
-            }
-            else{
-               filePath = 'courses.html'; 
-            }}
-            // else if(req.url ==='/courser/bca){ 
-        //     filePath = 'bca.html';
-        // }
-        // else if (req.url === '/courses/btech') {
-        //     filePath = 'btech.html';
-        // }
-        else if (req.url === '/contact') {
-            filePath = 'contact.html';
-        }
-        // else if (req.url === '/courses') {
-        //     filePath = 'courses.html';
-        // }
-        else if (req.url === '/facilities') {
-            filePath = 'facilities.html';
-        }
-        else if (req.url === '/placement') {
-            filePath = 'placement.html';
-        }
-        else if (req.url === '/students') {
-            filePath = 'students.html';
-        }
-        else {
-            res.statusCode = 404;
-            res.end('PAGE NOT FOUND');
-            return;
-        }
-        
-let fullPath = path.join(__dirname,'..', 'frontend', filePath);
-fs.readFile(fullPath, 'utf-8', (err, data) => {
-    if (err) {
-        res.statusCode = 500;
-        res.end('INTERNAL SERVER ERROR');
+    if (req.url === '/home') {
+        filePath = 'home.json';
+    } else if (req.url === '/about') {
+        filePath = 'about.json';
+    } else if (req.url === '/courses/bca') {
+        filePath = 'bca.json';
+    } else if (req.url === '/courses/btech') {
+        filePath = 'btech.json';
+    } else if (req.url === '/contact') {
+        filePath = 'contact.json';
+    } else if (req.url === '/courses') {
+        filePath = 'courses.json';
+    } else if (req.url === '/facilities') {
+        filePath = 'facilities.json';
+    } else if (req.url === '/placement') {
+        filePath = 'placement.json';
+    } else if (req.url === '/students') {
+        filePath = 'students.json';
+    } else {
+        res.statusCode = 404;
+        res.end('PAGE NOT FOUND');
         return;
     }
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/html');
-    res.end(data);
-})}
 
+    let fullPath = path.join(__dirname, '..', 'data', filePath);
+
+    fs.readFile(fullPath, 'utf-8', (err, data) => {
+        if (err) {
+            res.statusCode = 500;
+            res.end('INTERNAL SERVER ERROR');
+            return;
+        }
+
+        res.writeHead(200, {
+            'Content-Type': 'application/json'
+        });
+
+        res.end(data);
+    });
+
+    return;
+}
+res.writeHead(404,{'Content-Type':'application/json'})
+res.end('ROUTE NOT FOUND');
 })
+
 server.listen(3270, () => {
-    console.log('Server Running');
+    console.log(`Server Running at http://localhost:${port}`);
 })

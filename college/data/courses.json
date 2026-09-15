@@ -1,0 +1,17 @@
+{
+  "heading": "Our Courses",
+  "courses": [
+    {
+      "name": "BCA",
+      "description": "Bachelor of Computer Applications",
+      "duration": "3 years",
+      "link": "bca.html"
+    },
+    {
+      "name": "B.Tech",
+      "description": "Bachelor of Technology",
+      "duration": "4 years",
+      "link": "btech.html"
+    }
+  ]
+}
