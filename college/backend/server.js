@@ -7,7 +7,7 @@ const datafile = path.join(__dirname, 'datafile.json');
 const server = http.createServer((req, res) => {
     if (req.url === '/style.css' && req.method === 'GET') {
         res.statusCode = 200;
-        let pathcss = path.join(__dirname, 'frontend', 'style.css');
+        let pathcss = path.join(__dirname,'..', 'frontend', 'style.css');
         fs.readFile(pathcss, 'utf-8', (err, data) => {
             if (err) {
                 res.statusCode = 500;
@@ -104,7 +104,7 @@ const server = http.createServer((req, res) => {
             return;
         }
         
-let fullPath = path.join(__dirname, 'frontend', filePath);
+let fullPath = path.join(__dirname,'..', 'frontend', filePath);
 fs.readFile(fullPath, 'utf-8', (err, data) => {
     if (err) {
         res.statusCode = 500;
