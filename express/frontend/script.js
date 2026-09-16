@@ -25,10 +25,10 @@
 const page = window.location.pathname;
 console.log(page);
 const pageContent = document.getElementById('page-content');
-// const url = 'http://localhost:3270'
-const url='';
+const url = 'http://localhost:3270'
+// const url='';
 function loadData(fileName) {
-    return fetch(`/${fileName}`)
+    return fetch(`${url}/${fileName}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Unable to fetch data');

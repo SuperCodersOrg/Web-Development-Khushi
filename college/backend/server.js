@@ -81,15 +81,25 @@ if (req.method === 'GET') {
         filePath = 'home.json';
     } else if (req.url === '/about') {
         filePath = 'about.json';
-    } else if (req.url === '/courses/bca') {
-        filePath = 'bca.json';
-    } else if (req.url === '/courses/btech') {
-        filePath = 'btech.json';
+       
+    // } else if (req.url === '/courses/bca') {
+    //     filePath = 'bca.json';
+    // } else if (req.url === '/courses/btech') {
+    //     filePath = 'btech.json';
     } else if (req.url === '/contact') {
         filePath = 'contact.json';
     } else if (req.url === '/courses') {
         filePath = 'courses.json';
-    } else if (req.url === '/facilities') {
+    
+     } else if( req.url.startsWith('/courses/')){
+       let course = req.url.split('/')[2];
+       if(course!=='bca'||course!=='btech'){
+        res.statusCode=404;
+        req.end='page not found';
+    
+    filePath=`${course}.json`;}
+     }
+    else if (req.url === '/facilities') {
         filePath = 'facilities.json';
     } else if (req.url === '/placement') {
         filePath = 'placement.json';

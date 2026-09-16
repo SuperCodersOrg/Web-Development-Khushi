@@ -8,6 +8,12 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
+app.use((req,res,next)=>{
+     res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+next();
+})
 // app.get('/home',(req,res)=>{
 //     // res.send('homepage');
 //     res.send('<h1>hello</h1>');
@@ -105,29 +111,37 @@ app.get('/contact', (req, res) => {
 //         });
  sendData('contact.json', res);
 })
-app.get('/courses/bca', (req, res) => {
-    // res.sendFile(path.join(__dirname, '..', 'frontend', 'bca.html')
-    // , (err) => {
-    //     if (err) {
-    //         console.error(err);
-    //         res.status(500).send('File not found');
-    //         return;
-    //     }
-    // })
-       sendData('bca.json', res);
-});
+// app.get('/courses/bca', (req, res) => {
+//     // res.sendFile(path.join(__dirname, '..', 'frontend', 'bca.html')
+//     // , (err) => {
+//     //     if (err) {
+//     //         console.error(err);
+//     //         res.status(500).send('File not found');
+//     //         return;
+//     //     }
+//     // })
+//        sendData('bca.json', res);
+// });
 
-app.get('/courses/btech', (req, res) => {
-    // res.sendFile(path.join(__dirname, '..', 'frontend', 'btech.html')
-    //     , (err) => {
-    //         if (err) {
-    //             console.error(err);
-    //             res.status(500).send('File not found');
-    //             return;
-    //         }
-    //     });
-     sendData('btech.json', res);
+// app.get('/courses/btech', (req, res) => {
+//     // res.sendFile(path.join(__dirname, '..', 'frontend', 'btech.html')
+//     //     , (err) => {
+//     //         if (err) {
+//     //             console.error(err);
+//     //             res.status(500).send('File not found');
+//     //             return;
+//     //         }
+//     //     });
+//      sendData('btech.json', res);
+// })
+app.get('/courses/:courseName',(req,res)=>{
+    const course=req.params.courseName;
+    if(course!=='bca'&&course!=='btech'){
+        res.status(404).send('page not found');
+    }
+    sendData(`${course}.json`,res);
 })
+
 app.get('/facilities', (req, res) => {
     // res.sendFile(path.join(__dirname, '..', 'frontend', 'facilities.html')
     //     , (err) => {
