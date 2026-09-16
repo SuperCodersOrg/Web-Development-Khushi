@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>ToDo App</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body class="h-screen overflow-hidden bg-[#f5f0e6]">
+
+  <div
+    id="main-frame"
+    class="m-6 flex h-[calc(100vh-3rem)] flex-col rounded-2xl bg-[#d8c3a5] p-6"
+  >
+
+    <!-- Title -->
+    <div id="title" class="shrink-0">
+
+      <h1
+        class="text-center text-6xl font-bold text-[#4b3621] underline decoration-3 underline-offset-8 font-serif"
+      >
+        TO DO APP
+      </h1>
+
+    </div>
+
+
+    <div class="mt-6 flex min-h-0 flex-1 gap-8">
+
+   
+      <div
+        id="input-bar"
+        class="flex w-1/2 min-h-0 flex-col rounded-2xl bg-[#fffaf0] p-6 shadow-md"
+      >
+
+        <input
+          type="text"
+          id="title-box"
+          placeholder="Enter Title"
+          class="m-2 rounded-lg border-2 border-[#b8a58b] bg-[#fdf8ef] p-4 text-2xl text-[#4b3621] outline-none placeholder:text-[#9b8a75] focus:border-[#8b6f47] font-serif"
+        />
+
+        <span
+          id="title-error"
+          class="ml-2 text-lg font-semibold text-red-700"
+        ></span>
+
+        <textarea
+          id="description-box"
+          placeholder="Enter Description"
+          class="m-2 h-40 resize-none rounded-lg border-2 border-[#b8a58b] bg-[#fdf8ef] p-4 text-2xl text-[#4b3621] outline-none placeholder:text-[#9b8a75] focus:border-[#8b6f47] font-serif"
+        ></textarea>
+
+        <span
+          id="description-error"
+          class="ml-2 text-lg font-semibold text-red-700"
+        ></span>
+
+        <button
+          id="add-button"
+          type="button"
+          class="m-2 rounded-lg border-2 border-[#8b6f47] bg-[#c8ad87] px-6 py-4 text-2xl font-semibold text-[#3f2d1e] hover:bg-[#b99a70] font-serif"
+        >
+          Add Task
+        </button>
+
+      </div>
+
+     
+      <div
+        id="output-bar"
+        class="flex w-1/2 min-h-0 flex-col rounded-2xl bg-[#fffaf0] p-6 shadow-md"
+      >
+
+        <h1
+          id="no-task"
+          class="shrink-0 text-4xl italic text-[#806b52]"
+        >
+          No Task Yet...
+        </h1>
+
+      
+        <div
+          id="task-container"
+          class="mt-4 min-h-0 flex-1 space-y-5 overflow-y-auto pr-2"
+        ></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+ 
+  <script src="script.js"></script>
+
+</body>
+
+</html>
