@@ -42,20 +42,20 @@ if (page.endsWith('index.html') || page === '/' || page.endsWith('/')) {
         <section class="info1">
          <h2>${data.welcome.heading}</h2> 
          <p>${data.welcome.description}</p>
-          <a href="${data.welcome.buttonLink}" class="btn">
+        <a href="${data.welcome.buttonLink}" class="btn">
            ${data.welcome.buttonText} </a>
-            </section> 
-            <section class="info">
+        </section> 
+        <section class="info">
              <h2>${data.about.heading}</h2>
               <p>${data.about.description}</p>
-               </section> <section class="info2"> ${data.cards.map(card => ` 
+       </section>
+        <section class="info2"> ${data.cards.map(card => ` 
                 <div class="infoMatter">
                  <h3>${card.heading}</h3>
                   <p>${card.description}</p>
-                   <a href="${card.link}">
-                    ${card.linkText} </a>
+                <a href="${card.link}">${card.linkText} </a>
                      </div> `).join('')} 
-                     </section> `;
+         </section> `;
         })
         .catch(error => console.log(error));
 }
@@ -82,8 +82,8 @@ else if (page.endsWith('courses.html')) {
         .then(data => {
             pageContent.innerHTML = `
         <section class="info">
-         <h2>${data.heading}</h2>
-          <div class="info2"> ${data.courses.map(course => ` <div class="infoMatter"> 
+        <h2>${data.heading}</h2>
+        <div class="info2"> ${data.courses.map(course => ` <div class="infoMatter"> 
             <h3>${course.name}</h3> <p>${course.description}</p> <p>Duration: ${course.duration}</p>
              <a href="${course.link}">View Course</a> 
              </div> `).join('')} </div> 

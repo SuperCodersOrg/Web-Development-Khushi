@@ -1,55 +1,41 @@
 const path = require('path');
-// console.log('running by express');
-// const http =require('http');
 const fs = require('fs');
-// const port=3270;
 const datafile = path.join(__dirname, 'datafile.json');
 const express = require('express');
 const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
-app.use((req,res,next)=>{
-     res.setHeader('Access-Control-Allow-Origin', '*');
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    if(req.method==='OPTIONS'){
+    if (req.method === 'OPTIONS') {
         req.sendStatus(200);
         return;
     }
-next();
+    next();
 })
-
-// app.get('/home',(req,res)=>{
-//     // res.send('homepage');
-//     res.send('<h1>hello</h1>');
-// })
-function sendData(fileName, res) {   const filePath = path.join(__dirname, '..', 'data', fileName);
+function sendData(fileName, res) {
+    const filePath = path.join(__dirname, '..', 'data', fileName);
+    if (!fs.existsSync(fullPath))
+         { res.statusCode = 404; 
+        res.end('PAGE NOT FOUND');
+         return; }
 
     fs.readFile(filePath, 'utf8', (err, data) => {
         if (err) {
             return res.status(500).send(
-                 'File not found'
+                'File not found'
             );
         }
-        try{res.json(JSON.parse(data));}
-        catch{
+        try { res.json(JSON.parse(data)); }
+        catch {
             res.status(500).end('invalid json');
         }
 
-        
+
     });
 }
-// app.get('/style.css', (req, res) => {
-//     res.sendFile(path.join(__dirname, '..', 'frontend', 'style.css')
-//   , (err) => {
-//             if (err) {
-//                 console.error(err);
-//                 res.status(500).send('File not found');
-//                 return;
-//             }
-//         });
-// })
-
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html')
         , (err) => {
@@ -61,121 +47,34 @@ app.get('/', (req, res) => {
         }
 
     )
-    //  sendData('home.json', res);
-})
+   })
 app.get('/home', (req, res) => {
-    // res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html')
-    //     , (err) => {
-    //         if (err) {
-    //             console.error(err);
-    //             res.status(500).send('File not found');
-    //             return;
-    //         }
-    //     }
-
-    // )
-      sendData('home.json', res);
+    sendData('home.json', res);
 })
 app.get('/about', (req, res) => {
-    // res.sendFile(path.join(__dirname, '..', 'frontend', 'about.html')
-    //     , (err) => {
-    //         if (err) {
-    //             console.error(err);
-    //             res.status(500).send('File not found');
-    //             return;
-    //         }
-    //     });
-      sendData('about.json', res);
+    sendData('about.json', res);
 })
 app.get('/placement', (req, res) => {
-    // res.sendFile(path.join(__dirname, '..', 'frontend', 'placement.html')
-    //     , (err) => {
-    //         if (err) {
-    //             console.error(err);
-    //             res.status(500).send('File not found');
-    //             return;
-    //         }
-    //     });
-    sendData('placement.json', res);
+      sendData('placement.json', res);
 })
 app.get('/courses', (req, res) => {
-    // res.sendFile(path.join(__dirname, '..', 'frontend', 'courses.html')
-    //     , (err) => {
-    //         if (err) {
-    //             console.error(err);
-    //             res.status(500).send('File not found');
-    //             return;
-    //         }
-    //     });
-      sendData('courses.json', res);
+     sendData('courses.json', res);
 })
 app.get('/contact', (req, res) => {
-//     res.sendFile(path.join(__dirname, '..', 'frontend', 'contact.html')
-// , (err) => {
-//             if (err) {
-//                 console.error(err);
-//                 res.status(500).send('File not found');
-//                 return;
-//             }
-//         });
- sendData('contact.json', res);
+      sendData('contact.json', res);
 })
-// app.get('/courses/bca', (req, res) => {
-//     // res.sendFile(path.join(__dirname, '..', 'frontend', 'bca.html')
-//     // , (err) => {
-//     //     if (err) {
-//     //         console.error(err);
-//     //         res.status(500).send('File not found');
-//     //         return;
-//     //     }
-//     // })
-//        sendData('bca.json', res);
-// });
-
-// app.get('/courses/btech', (req, res) => {
-//     // res.sendFile(path.join(__dirname, '..', 'frontend', 'btech.html')
-//     //     , (err) => {
-//     //         if (err) {
-//     //             console.error(err);
-//     //             res.status(500).send('File not found');
-//     //             return;
-//     //         }
-//     //     });
-//      sendData('btech.json', res);
-// })
-app.get('/courses/:courseName',(req,res)=>{
-    const course=req.params.courseName;
-    if(course!=='bca'&&course!=='btech'){
-        res.status(404).send('page not found');
-    }
-    sendData(`${course}.json`,res);
+app.get('/courses/:courseName', (req, res) => {
+    const course = req.params.courseName;    
+    sendData(`${course}.json`, res);
 })
-
 app.get('/facilities', (req, res) => {
-    // res.sendFile(path.join(__dirname, '..', 'frontend', 'facilities.html')
-    //     , (err) => {
-    //         if (err) {
-    //             console.error(err);
-    //             res.status(500).send('File not found');
-    //             return;
-    //         }
-    //     });
-    sendData('facilities.json', res);
+       sendData('facilities.json', res);
 })
 app.get('/students', (req, res) => {
-    // res.sendFile(path.join(__dirname, '..', 'frontend', 'students.html')
-    //     , (err) => {
-    //         if (err) {
-    //             console.error(err);
-    //             res.status(500).send('File not found');
-    //             return;
-    //         }
-    //     });
-    sendData('students.json', res);
+       sendData('students.json', res);
 })
 app.post('/students', (req, res) => {
-    // res.setHeader('Content-Type', 'application/json');
-    const filePath=path.join(__dirname,'..','data','students.json');
+    const filePath = path.join(__dirname, '..', 'data', 'students.json');
     const newData = req.body;
 
     fs.readFile(filePath, 'utf-8', (err, data) => {
@@ -188,18 +87,18 @@ app.post('/students', (req, res) => {
             }
         }
         value.push(newData);
-    
-    fs.writeFile(filePath, JSON.stringify(value, null, 2), (err) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('File not found');
-            return;
-        }
-    
-    res.status(201).send(JSON.stringify({
-        message: 'Contact stored successfully'
-               }))
+
+        fs.writeFile(filePath, JSON.stringify(value, null, 2), (err) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('File not found');
+                return;
             }
+
+            res.status(201).send(JSON.stringify({
+                message: 'Contact stored successfully'
+            }))
+        }
         );
     });
 });
