@@ -1,6 +1,8 @@
-// --------------------
+
+
+// URL
+let url = "http://localhost:3270/";
 // Icons
-// --------------------
 
 let icon1 = `
 <svg xmlns="http://www.w3.org/2000/svg"
@@ -64,240 +66,172 @@ let icon4 = `
 `;
 
 
-// --------------------
+
 // Elements
-// --------------------
+
 
 let titleBox = document.getElementById("title-box");
 let descriptionBox = document.getElementById("description-box");
-
 let titleError = document.getElementById("title-error");
 let descriptionError = document.getElementById("description-error");
-
 let addButton = document.getElementById("add-button");
-
 let taskContainer = document.getElementById("task-container");
 let noTask = document.getElementById("no-task");
 
-
-// --------------------
 // State
-// --------------------
-
-let tasks = getTaskFromLocalStorage();
-
+let tasks = [];
 let edit = false;
 let editId = null;
 
-
-// --------------------
-// Add button listener
-// --------------------
-
+//  Add button listener
 addButton.addEventListener("click", addTask);
 
-
-// --------------------
 // Task button listener
-// Event delegation
-// --------------------
+
 
 taskContainer.addEventListener("click", function (event) {
-
     let button = event.target.closest("button");
-
     if (!button) {
         return;
     }
-
     let taskElement = button.closest(".task");
-
     if (!taskElement) {
         return;
     }
-
     let id = Number(taskElement.id);
     let action = button.dataset.action;
-
     if (action === "delete") {
         deleteTask(id);
-    }
-
+   }
     else if (action === "complete") {
         completeTask(id);
     }
-
     else if (action === "edit") {
         editTask(id);
     }
-
 });
-
-
-// --------------------
 // Validation
-// --------------------
 
 titleBox.addEventListener("input", function () {
-
     if (titleBox.value.trim() === "") {
         titleError.textContent = "Title is required";
     } else {
         titleError.textContent = "";
     }
-
 });
-
 descriptionBox.addEventListener("input", function () {
-
     if (descriptionBox.value.trim() === "") {
         descriptionError.textContent = "Description is required";
     } else {
         descriptionError.textContent = "";
     }
-
 });
 
 
-// --------------------
 // Add or update task
-// --------------------
-
 function addTask() {
-
     let titleValue = titleBox.value.trim();
     let descriptionValue = descriptionBox.value.trim();
-
     titleError.textContent = "";
     descriptionError.textContent = "";
-
     if (titleValue === "") {
         titleError.textContent = "Title is required";
         return;
     }
-
     if (descriptionValue === "") {
         descriptionError.textContent = "Description is required";
         return;
     }
-
     // Update existing task
     if (edit === true) {
-
-        let taskData = tasks.find(function (task) {
-            return task.id === editId;
-        });
-
-        if (taskData) {
-            taskData.title = titleValue;
-            taskData.description = descriptionValue;
-        }
-
-        edit = false;
+         fetch(`${url}edit`,{
+        method:'PUT',
+        headers:{ 'content-type':'application/json'},
+        body:JSON.stringify({id:editId,title:titleValue,description:descriptionValue})
+    })
+    .then((response)=>{
+        if(!response.ok){throw new Error(`HTTP ERROR : ${response.status}`);
+        }  return response.json()})
+       .then(()=>{
+       edit = false;
         editId = null;
-
         addButton.textContent = "Add Task";
+        titleBox.value = "";
+            descriptionBox.value = "";
+            getTaskFromServer();
+       })
+       .catch((error)=>{ console.error("edit error:",error)}) 
+       return;
+       
     }
-
-    // Add new task
-    else {
-
+   // Add new task
+    
         let newTask = {
+            isdeleted:'false',
             id: Date.now(),
             title: titleValue,
             description: descriptionValue,
             status: "pending",
             createdAt: new Date().toISOString()
         };
-
-        tasks.push(newTask);
-    }
-
-    saveDataInLocalStorage();
-
+          
+    saveDataOnServer(newTask);
     titleBox.value = "";
     descriptionBox.value = "";
-
-    makeTaskFromLocalStorage();
-
+   
 }
 
-
-// --------------------
 // Delete task
-// --------------------
-
 function deleteTask(id) {
-
-    tasks = tasks.filter(function (task) {
-        return task.id !== id;
-    });
-
-    saveDataInLocalStorage();
-
-    makeTaskFromLocalStorage();
-
+  fetch(`${url}delete`,{
+        method:'DELETE',
+        headers:{ 'content-type':'application/json'},
+        body:JSON.stringify({deleteId:id})
+    })
+    .then((response)=>{
+        if(!response.ok){throw new Error(`HTTP ERROR : ${response.status}`);
+        }  return response.json()})
+    .then((data) =>{
+       getTaskFromServer();
+    }) 
+    .catch((error)=>{ console.error("delete error:"),error})  
 }
 
-
-// --------------------
 // Complete task
-// --------------------
-
 function completeTask(id) {
-
-    let taskData = tasks.find(function (task) {
-        return task.id === id;
-    });
-
-    if (!taskData) {
-        return;
-    }
-
-    taskData.status =
-        taskData.status === "pending" ? "done" : "pending";
-
-    saveDataInLocalStorage();
-
-    makeTaskFromLocalStorage();
-
+     fetch(`${url}stateChange`,{
+        method:'PATCH',
+        headers:{ 'content-type':'application/json'},
+        body:JSON.stringify({Id:id})
+    })
+    .then((response)=>{
+        if(!response.ok){throw new Error(`HTTP ERROR : ${response.status}`);
+        }  return response.json()})
+    .then((data) =>{
+       getTaskFromServer();
+    }) 
+    .catch((error)=>{ console.error("State change error:"),error})
 }
 
-
-// --------------------
 // Edit task
-// --------------------
-
 function editTask(id) {
-
     let taskData = tasks.find(function (task) {
         return task.id === id;
     });
-
     if (!taskData) {
         return;
     }
-
     edit = true;
     editId = id;
-
     titleBox.value = taskData.title;
     descriptionBox.value = taskData.description;
-
     addButton.textContent = "Save Changes";
-
 }
 
-
-// --------------------
 // Create task structure
-// --------------------
-
 function makeTaskInOutBox(taskData) {
-
-    // Main task box
+   // Main task box
     let newTask = document.createElement("div");
-
     newTask.classList.add(
         "task",
         "rounded-xl",
@@ -308,13 +242,9 @@ function makeTaskInOutBox(taskData) {
         "shadow-sm",
         "break-words"
     );
-
     newTask.id = taskData.id;
-
-
     // Title
     let title = document.createElement("h1");
-
     title.classList.add(
         "task-title",
         "mb-2",
@@ -324,43 +254,30 @@ function makeTaskInOutBox(taskData) {
         "underline",
         "underline-offset-8"
     );
-
     title.textContent = taskData.title;
-
-
     // Description
     let description = document.createElement("p");
-
     description.classList.add(
         "task-description",
         "mb-2",
         "text-2xl",
         "text-[#5f4b35]"
     );
-
     description.textContent = taskData.description;
-
-
     // Date
     let date = document.createElement("p");
-
     date.classList.add(
         "task-date",
         "mb-4",
         "text-lg",
         "text-[#806b52]"
     );
-
     date.textContent =
         "Created: " +
         new Date(taskData.createdAt).toLocaleString();
-
-
     // Delete button
     let deleteButton = document.createElement("button");
-
     deleteButton.type = "button";
-
     deleteButton.classList.add(
         "delete-button",
         "mr-2",
@@ -371,16 +288,11 @@ function makeTaskInOutBox(taskData) {
         "p-3",
         "hover:bg-[#c8ad87]"
     );
-
     deleteButton.dataset.action = "delete";
     deleteButton.innerHTML = icon1;
-
-
     // Complete button
     let completeButton = document.createElement("button");
-
     completeButton.type = "button";
-
     completeButton.classList.add(
         "complete-button",
         "mr-2",
@@ -391,20 +303,14 @@ function makeTaskInOutBox(taskData) {
         "p-3",
         "hover:bg-[#c8ad87]"
     );
-
     completeButton.dataset.action = "complete";
-
     completeButton.innerHTML =
         taskData.status === "done" ? icon3 : icon2;
-
-
     // Edit button
     let editButton = document.createElement("button");
-
     editButton.type = "button";
-
     editButton.classList.add(
-        "edit-button",
+       "edit-button",
         "rounded-lg",
         "border",
         "border-[#8b6f47]",
@@ -412,103 +318,71 @@ function makeTaskInOutBox(taskData) {
         "p-3",
         "hover:bg-[#c8ad87]"
     );
-
     editButton.dataset.action = "edit";
     editButton.innerHTML = icon4;
-
-
     // Append elements
     newTask.appendChild(title);
     newTask.appendChild(description);
     newTask.appendChild(date);
-
     newTask.appendChild(deleteButton);
     newTask.appendChild(completeButton);
     newTask.appendChild(editButton);
-
     taskContainer.appendChild(newTask);
-
 }
-
-
-// --------------------
 // Display tasks
-// --------------------
-
-function makeTaskFromLocalStorage() {
-
+function makeTaskFromServer() {
     taskContainer.innerHTML = "";
-
     if (tasks.length === 0) {
         noTask.style.display = "block";
         return;
     }
-
     noTask.style.display = "none";
-
     for (let i = 0; i < tasks.length; i++) {
         makeTaskInOutBox(tasks[i]);
     }
-
 }
+//  Get tasks from localStorage
 
-
-// --------------------
-// Get tasks from localStorage
-// --------------------
-
-function getTaskFromLocalStorage() {
-
-    let tasksData = localStorage.getItem("tasks");
-
-    if (!tasksData) {
-        return [];
-    }
-
-    try {
-
-        let storedTasks = JSON.parse(tasksData);
-
-        if (!Array.isArray(storedTasks)) {
-            return [];
+function getTaskFromServer() {
+      
+       fetch(`${url}loadTask`)
+    .then((response)=>{
+        if(!response.ok){
+          throw new Error(`HTTP ERROR : ${response.status}`);
+        }  return response.json()})
+    .then((data) =>{
+        if(!Array.isArray(data)){
+            tasks=[];
         }
-
-        return storedTasks.map(function (task) {
-
+        else{ tasks=data.map(function (task) {
             if (!task.createdAt) {
                 task.createdAt = new Date().toISOString();
             }
-
             return task;
-
-        });
-
-    } catch (error) {
-
-        console.error("Invalid localStorage data:", error);
-
-        localStorage.removeItem("tasks");
-
-        return [];
-    }
-
+        })}
+       makeTaskFromServer();
+    })    
+    . catch ((error)=> {
+        console.error("Invalid Server data:", error);
+        tasks=[];        
+        makeTaskFromServer();
+    })
 }
-
-
-// --------------------
 // Save tasks
-// --------------------
-
-function saveDataInLocalStorage() {
-
-    localStorage.setItem(
-        "tasks",
-        JSON.stringify(tasks)
-    );
-
-
-}
+function saveDataOnServer(task) {
+    fetch(`${url}addTask`,{
+        method:'POST',
+        headers:{ 'content-type':'application/json'},
+        body:JSON.stringify(task)
+    })
+    .then((response)=>{
+        if(!response.ok){throw new Error(`HTTP ERROR : ${response.status}`);
+        }  return response.json()})
+    .then(() =>{
+      getTaskFromServer();
+    })
+    .catch((error) => console.error("Add task error:", error));
+}    
+ 
 // Initial display
-
-
-makeTaskFromLocalStorage();
+getTaskFromServer();
