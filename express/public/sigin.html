@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sigin</title>
+</head>
+<body>
+    <h1>sigin</h1>
+    <form ID="loginForm">
+        <input type="text" id="username" name="username" placeholder="Username">
+        <input type="text" id="password"name="username" placeholder="password">
+        <input type="text" id="role" placeholder="role">
+        <button type="submit"> submit</button>
+
+    </form>
+    <script>
+        const form =document.getElementById("loginForm");
+        form.addEventListener("submit",(e)=>{
+            e.preventDefault();
+            const username=document.getElementById("username").value;
+            const password=document.getElementById("password").value;
+            const role=document.getElementById("role").value;
+            
+            fetch("/login",{
+                method :"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },body:JSON.stringify({
+                    username:username,
+                    password:password,
+                    role:role
+                })
+            }).then((response) => {
+                return response.json();
+            }).then((data)=>{
+                console.log(data)
+               if (data.success) {
+                    window.location.href = "/profile";
+                } else {
+                    alert(data.message);
+                }
+            }) .catch((error) => {
+                console.log(error);
+            });
+        })
+    </script>
+</body>
+</html>
