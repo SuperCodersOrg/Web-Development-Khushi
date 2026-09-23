@@ -22,7 +22,7 @@
             const password=document.getElementById("password").value;
             const role=document.getElementById("role").value;
             
-            fetch("/login",{
+            fetch("/signin",{
                 method :"POST",
                 headers:{
                     "Content-Type":"application/json"
@@ -36,7 +36,7 @@
             }).then((data)=>{
                 console.log(data)
                if (data.success) {
-                    window.location.href = "/profile";
+                    window.location.href = "/teacher";
                 } else {
                     alert(data.message);
                 }
