@@ -1,0 +1,14 @@
+[
+    {
+        "username": "khushiJ",
+        "email": "sanchi.bareja2008@gmail.com",
+        "password": "1234",
+        "role": "student"
+    },
+    {
+        "username": "teacher1",
+        "email": "khushi25022@cqst.in",
+        "password": "12345",
+        "role": "teacher"
+    }
+]
