@@ -84,7 +84,7 @@ app.delete('/delete', (req, res) => {
         res.status(500).json({error:"failed to load"})
     }
 }
-)
+)+
 app.patch('/stateChange', (req, res) => {
     try {
         const { Id } = req.body;

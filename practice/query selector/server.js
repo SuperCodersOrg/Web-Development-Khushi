@@ -21,9 +21,9 @@ function find(searchQuery,callback){
 };
 const server =http.createServer((req,res)=>{
     const parsedUrl =new URL(req.url,`http://${req.headers.host}`);
-    // console.log("host    ",req.headers.host);
-    //  console.log(req.url);
-    // console.log(parsedUrl);
+    console.log("host    ",req.headers.host);
+     console.log(req.url);
+    console.log(parsedUrl);
    
     const pathname =parsedUrl.pathname;
     if(pathname==='/search'&& req.method==='GET'){

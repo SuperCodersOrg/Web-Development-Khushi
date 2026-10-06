@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUERY PARAMETER
+
+    </title>
+</head>
+<body>
+   <h2>SEARCH</h2>
+   <input type="text" id="search" placeholder=""entr name>
+    <button id="searchBtn">Search</button>
+    <select id="category">
+    <option value="men">Men's Clothing</option>
+    <option value="women">Women's Clothing</option>
+    <option value="electronics">Electronics</option>
+    <option value="jewelery">Jewelery</option>
+  </select>
+  <script>
+  const dropdown = document.getElementById("category");
+  let input;
+   let dropdownValue ;
+   const query=new URLSearchParams();
+
+  dropdown.addEventListener("change", () => {
+    console.log(dropdown.value);
+    dropdownValue =dropdown.value;
+  });
+      document.getElementById('searchBtn').addEventListener("click",()=>{
+       input = document.getElementById('search').value;
+      console.log(input);
+      if(input){
+        query.set("input",input);
+      }
+      if(dropdownValue){
+        query.set("dropdown",dropdownValue);
+      }
+      fetch(`http://localhost:3270/search?${query}`)
+      .then(response=>response.json())
+      .then(data=>console.log(JSON.stringify(data)))
+      .catch((error) => console.error("Add task error:", error));
+      
+
+
+  })
+
+</script>
+
+
+</body>
+</html>

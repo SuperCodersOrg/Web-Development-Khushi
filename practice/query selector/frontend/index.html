@@ -16,7 +16,7 @@
         document.getElementById('searchBtn').addEventListener('click', function() {
             let query = document.getElementById('search').value;
             let resultList = document.getElementById('result');
-            // let url = new URL('http://localhost:3000/search');
+            let url = new URL('http://localhost:3000/search');
             // url.searchParams.append('q', query);
             const queryset =new URLSearchParams();
             if(query){

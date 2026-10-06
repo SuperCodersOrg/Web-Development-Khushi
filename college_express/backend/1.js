@@ -10,7 +10,7 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     if (req.method === 'OPTIONS') {
-        req.sendStatus(200);
+        res.sendStatus(200);
         return;
     }
     next();
@@ -28,9 +28,11 @@ function sendData(fileName, res) {
                 'File not found'
             );
         }
-        try { res.json(JSON.parse(data)); }
+        try { res.json(JSON.parse(data));
+           res.status(200).send('request completed');
+         }
         catch {
-            res.status(500).end('invalid json');
+            res.status(500).send('invalid json');
         }
 
 
@@ -62,6 +64,7 @@ app.get('/courses', (req, res) => {
 })
 app.get('/contact', (req, res) => {
       sendData('contact.json', res);
+      
 })
 app.get('/courses/:courseName', (req, res) => {
     const course = req.params.courseName;    
@@ -76,6 +79,7 @@ app.get('/students', (req, res) => {
 app.post('/students', (req, res) => {
     const filePath = path.join(__dirname, '..', 'data', 'students.json');
     const newData = req.body;
+    
 
     fs.readFile(filePath, 'utf-8', (err, data) => {
         let value = [];

@@ -14,22 +14,14 @@ function isStudent(req,res,next){
     next();
 }
 function isTeacher(req, res, next) {
-
     if (!req.session.user) {
-
         return res.redirect("/login");
-
     }
-
-
     if (req.session.user.role !== "teacher") {
-
         return res.status(403).send(
             "Access denied. Teacher only."
         );
-
     }
-
     next();
 }
 module.exports = {
