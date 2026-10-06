@@ -79,10 +79,11 @@ router.get("/forgot-password", (req, res) => {
     res.redirect("/forgot_password.html");
 })
 router.post("/forgot-password", (req, res) => {
-    const { email } = req.body;
+    const { email,role } = req.body;
     const users = getdata();
     const user = users.find(
-        user => user.email === email
+        user =>{ user.email === email && user.role===role }
+
     );
     if (!user) {
         return res.send("Email is not registered");

@@ -1,8 +1,7 @@
 const nodemailer=require("nodemailer");
-const GMAIL="khushijangra566@gmail.com";
-const PASS="ttaq rnuq twcq otuv";
-
-
+const GMAIL=process.env.GMAIL;
+const PASS=process.env.PASS;
+require('dotenv').config();
 const transporter=nodemailer.createTransport({
     service:"gmail",
     auth:{
